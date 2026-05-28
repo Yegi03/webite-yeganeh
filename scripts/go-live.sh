@@ -7,15 +7,24 @@ cd "$ROOT"
 REPO_NAME="${REPO_NAME:-mywebsite}"
 DOMAIN="theyeganeh.com"
 
-echo "==> Checking GitHub CLI..."
+if [[ -f "$ROOT/.env.deploy" ]]; then
+  set -a
+  # shellcheck source=/dev/null
+  source "$ROOT/.env.deploy"
+  set +a
+fi
+
+echo "==> GitHub..."
 if ! command -v gh >/dev/null 2>&1; then
   echo "Install GitHub CLI: brew install gh"
   exit 1
 fi
 
-if ! gh auth status >/dev/null 2>&1; then
-  echo "Log in to GitHub (browser will open):"
-  gh auth login -h github.com -p https -w
+if [[ -n "${GH_TOKEN:-}" ]]; then
+  echo "$GH_TOKEN" | gh auth login --with-token
+elif ! gh auth status >/dev/null 2>&1; then
+  echo "Set GH_TOKEN in .env.deploy or run: gh auth login -w"
+  exit 1
 fi
 
 echo "==> Creating GitHub repo (if needed) and pushing..."
@@ -26,20 +35,23 @@ else
 fi
 
 echo "==> Deploying to Vercel..."
-if ! npx vercel whoami >/dev/null 2>&1; then
-  echo "Log in to Vercel (browser will open):"
-  npx vercel login
+VERCEL_ARGS=(--prod --yes)
+if [[ -n "${VERCEL_TOKEN:-}" ]]; then
+  VERCEL_ARGS+=(--token "$VERCEL_TOKEN")
+elif ! npx vercel whoami >/dev/null 2>&1; then
+  echo "Set VERCEL_TOKEN in .env.deploy or run: npx vercel login"
+  exit 1
 fi
 
-npx vercel link --yes 2>/dev/null || npx vercel link
-npx vercel --prod --yes
+if [[ ! -d "$ROOT/.vercel" ]]; then
+  npx vercel link "${VERCEL_ARGS[@]}" 2>/dev/null || npx vercel link "${VERCEL_ARGS[@]}"
+fi
+npx vercel deploy "${VERCEL_ARGS[@]}"
 
 echo ""
-echo "==> Almost done! Connect your domain in Vercel:"
-echo "  1. Open https://vercel.com/dashboard"
-echo "  2. Select this project → Settings → Domains"
-echo "  3. Add: $DOMAIN and www.$DOMAIN"
-echo "  4. Copy the DNS records Vercel shows"
-echo "  5. In Squarespace: Domains → $DOMAIN → DNS → replace parking records"
+echo "==> Connect your domain in Vercel:"
+echo "  1. https://vercel.com/dashboard → project → Settings → Domains"
+echo "  2. Add: $DOMAIN and www.$DOMAIN"
+echo "  3. Update DNS in Squarespace with the records Vercel shows"
 echo ""
-echo "Your site will be live at https://$DOMAIN once DNS propagates."
+echo "Revoke tokens after setup if you only needed them once."
