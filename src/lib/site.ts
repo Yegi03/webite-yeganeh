@@ -6,7 +6,7 @@ export const siteConfig = {
   url: "https://theyeganeh.com",
   author: "Yeganeh",
   links: {
-    email: "mailto:hello@theyeganeh.com",
+    email: "mailto:yeganeh.ab03@gmail.com",
     github: "https://github.com/Yegi03",
     scholar: "https://scholar.google.com/citations?user=FvN4JSMAAAAJ&hl=en",
     linkedin:
