@@ -7,9 +7,10 @@ export const siteConfig = {
   author: "Yeganeh",
   links: {
     email: "mailto:hello@theyeganeh.com",
-    github: "https://github.com",
-    scholar: "https://scholar.google.com",
-    linkedin: "https://linkedin.com",
+    github: "https://github.com/Yegi03",
+    scholar: "https://scholar.google.com/citations?user=FvN4JSMAAAAJ&hl=en",
+    linkedin:
+      "https://www.linkedin.com/in/yeganeh-abdollahinejad-70163124b/",
   },
 } as const;
 
