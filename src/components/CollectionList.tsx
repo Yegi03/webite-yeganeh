@@ -2,17 +2,17 @@ import Link from "next/link";
 import type { ContentItem } from "@/lib/content";
 import { formatDate } from "@/lib/content";
 
-export function PostList({
+export function CollectionList({
   items,
   basePath,
+  emptyText = "Nothing here yet — check back soon.",
 }: {
   items: ContentItem[];
-  basePath: "/blog" | "/research";
+  basePath: string;
+  emptyText?: string;
 }) {
   if (items.length === 0) {
-    return (
-      <p className="text-stone-500">Nothing here yet — check back soon.</p>
-    );
+    return <p className="text-stone-500">{emptyText}</p>;
   }
 
   return (
@@ -20,9 +20,11 @@ export function PostList({
       {items.map((item) => (
         <li key={item.slug} className="py-8 first:pt-0 last:pb-0">
           <article>
-            <time className="text-sm text-stone-500" dateTime={item.date}>
-              {formatDate(item.date)}
-            </time>
+            {item.date && (
+              <time className="text-sm text-stone-500" dateTime={item.date}>
+                {formatDate(item.date)}
+              </time>
+            )}
             <h2 className="mt-1 font-serif text-xl font-medium text-stone-900">
               <Link
                 href={`${basePath}/${item.slug}`}
@@ -31,7 +33,7 @@ export function PostList({
                 {item.title}
               </Link>
             </h2>
-            {"venue" in item && item.venue && (
+            {item.venue && (
               <p className="mt-1 text-sm text-teal-800">{item.venue}</p>
             )}
             <p className="mt-2 text-stone-600">{item.description}</p>

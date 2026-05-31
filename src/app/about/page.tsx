@@ -2,14 +2,16 @@ import type { Metadata } from "next";
 import { siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "About",
+  title: "About Me",
   description: `About ${siteConfig.author}`,
 };
 
 export default function AboutPage() {
   return (
     <div className="mx-auto max-w-3xl px-6 py-16">
-      <h1 className="font-serif text-3xl font-medium text-stone-900">About</h1>
+      <h1 className="font-serif text-3xl font-medium text-stone-900">
+        About Me
+      </h1>
       <div className="mt-8 space-y-5 text-lg leading-relaxed text-stone-600">
         <p>
           I&apos;m {siteConfig.author}. I use this site to share research,

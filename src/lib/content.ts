@@ -10,12 +10,19 @@ export type ContentItem = {
   tags?: string[];
   draft?: boolean;
   venue?: string;
+  link?: string;
   content: string;
 };
 
+export type CollectionName =
+  | "publications"
+  | "projects"
+  | "models"
+  | "notes";
+
 const contentRoot = path.join(process.cwd(), "content");
 
-function getMarkdownFiles(dir: string): string[] {
+function getMarkdownSlugs(dir: string): string[] {
   if (!fs.existsSync(dir)) return [];
   return fs
     .readdirSync(dir)
@@ -23,68 +30,46 @@ function getMarkdownFiles(dir: string): string[] {
     .map((file) => file.replace(/\.md$/, ""));
 }
 
-function parseFile(
-  directory: string,
-  slug: string,
-  extraFields: string[] = [],
-): ContentItem | null {
+function parseFile(directory: string, slug: string): ContentItem | null {
   const filePath = path.join(directory, `${slug}.md`);
   if (!fs.existsSync(filePath)) return null;
 
   const raw = fs.readFileSync(filePath, "utf8");
   const { data, content } = matter(raw);
 
-  const item: ContentItem = {
+  return {
     slug,
     title: String(data.title ?? slug),
     date: String(data.date ?? ""),
     description: String(data.description ?? ""),
     tags: Array.isArray(data.tags) ? data.tags.map(String) : undefined,
     draft: Boolean(data.draft),
+    venue: data.venue ? String(data.venue) : undefined,
+    link: data.link ? String(data.link) : undefined,
     content,
   };
-
-  if (extraFields.includes("venue") && data.venue) {
-    item.venue = String(data.venue);
-  }
-
-  return item;
 }
 
-function getAllItems(
-  type: "blog" | "research",
-  extraFields: string[] = [],
-): ContentItem[] {
-  const dir = path.join(contentRoot, type);
-  return getMarkdownFiles(dir)
-    .map((slug) => parseFile(dir, slug, extraFields))
+export function getCollection(name: CollectionName): ContentItem[] {
+  const dir = path.join(contentRoot, name);
+  return getMarkdownSlugs(dir)
+    .map((slug) => parseFile(dir, slug))
     .filter((item): item is ContentItem => item !== null && !item.draft)
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 }
 
-export function getBlogPosts() {
-  return getAllItems("blog");
-}
-
-export function getBlogPost(slug: string) {
-  const dir = path.join(contentRoot, "blog");
+export function getCollectionItem(
+  name: CollectionName,
+  slug: string,
+): ContentItem | null {
+  const dir = path.join(contentRoot, name);
   const item = parseFile(dir, slug);
   if (!item || item.draft) return null;
   return item;
 }
 
-export function getResearchItems() {
-  return getAllItems("research", ["venue"]);
-}
-
-export function getResearchItem(slug: string) {
-  const dir = path.join(contentRoot, "research");
-  const item = parseFile(dir, slug, ["venue"]);
-  if (!item || item.draft) return null;
-  return item;
-}
-
 export function formatDate(date: string) {
+  if (!date) return "";
   return new Date(date).toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",

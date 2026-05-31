@@ -17,7 +17,14 @@ export const siteConfig = {
 
 export const navItems = [
   { href: "/", label: "Home" },
-  { href: "/about", label: "About" },
-  { href: "/research", label: "Research" },
-  { href: "/blog", label: "Blog" },
+  { href: "/about", label: "About Me" },
+  { href: "/research", label: "Research I'm Chasing" },
+  { href: "/projects", label: "Projects & Experiments" },
+  { href: "/publications", label: "Publications" },
+  { href: "/models", label: "Models, Math & Messy Data" },
+  { href: "/resources", label: "Interesting Resources" },
+  { href: "/notes", label: "Brain Notes & Memory Drawer" },
+  { href: "/now", label: "Current Obsessions" },
+  { href: "/cv", label: "CV" },
+  { href: "/contact", label: "Contact" },
 ] as const;
