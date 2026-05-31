@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { ExploreCards } from "@/components/ExploreCards";
+import { Reveal } from "@/components/Reveal";
 import { formatDate, getCollection } from "@/lib/content";
 import { siteConfig } from "@/lib/site";
 
@@ -35,32 +37,15 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="mt-20">
+      <Reveal className="mt-20">
         <h2 className="font-serif text-2xl font-medium text-stone-900">
           Explore
         </h2>
-        <div className="mt-6 grid gap-4 sm:grid-cols-2">
-          {[
-            { href: "/projects", label: "Projects & Experiments" },
-            { href: "/publications", label: "Publications" },
-            { href: "/models", label: "Models, Math & Messy Data" },
-            { href: "/resources", label: "Interesting Resources" },
-            { href: "/notes", label: "Brain Notes & Memory Drawer" },
-            { href: "/now", label: "Current Obsessions" },
-          ].map((card) => (
-            <Link
-              key={card.href}
-              href={card.href}
-              className="rounded-lg border border-stone-200 px-5 py-4 text-stone-800 transition-colors hover:border-stone-400 hover:bg-stone-50"
-            >
-              {card.label}
-            </Link>
-          ))}
-        </div>
-      </section>
+        <ExploreCards />
+      </Reveal>
 
       {recentNotes.length > 0 && (
-        <section className="mt-20">
+        <Reveal className="mt-20">
           <div className="flex items-baseline justify-between gap-4">
             <h2 className="font-serif text-2xl font-medium text-stone-900">
               Recent notes
@@ -90,7 +75,7 @@ export default function Home() {
               </li>
             ))}
           </ul>
-        </section>
+        </Reveal>
       )}
     </div>
   );

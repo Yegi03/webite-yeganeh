@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Reveal } from "@/components/Reveal";
 import type { ContentItem } from "@/lib/content";
 import { formatDate } from "@/lib/content";
 
@@ -17,9 +18,10 @@ export function CollectionList({
 
   return (
     <ul className="divide-y divide-stone-200/80">
-      {items.map((item) => (
+      {items.map((item, i) => (
         <li key={item.slug} className="py-8 first:pt-0 last:pb-0">
-          <article>
+          <Reveal delay={Math.min(i * 0.05, 0.3)}>
+          <article className="group">
             {item.date && (
               <time className="text-sm text-stone-500" dateTime={item.date}>
                 {formatDate(item.date)}
@@ -50,6 +52,7 @@ export function CollectionList({
               </ul>
             )}
           </article>
+          </Reveal>
         </li>
       ))}
     </ul>
