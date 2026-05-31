@@ -42,8 +42,16 @@ export default function AboutPage() {
               href={siteConfig.links.email}
               className="text-teal-800 hover:underline"
             >
-              Email
+              yeganeh.ab03@gmail.com
+            </a>{" "}
+            (
+            <a
+              href={siteConfig.links.emailAlt}
+              className="text-teal-800 hover:underline"
+            >
+              yegi@msu.edu
             </a>
+            )
           </li>
           <li>
             <a

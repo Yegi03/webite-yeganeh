@@ -7,6 +7,7 @@ export const siteConfig = {
   author: "Yeganeh",
   links: {
     email: "mailto:yeganeh.ab03@gmail.com",
+    emailAlt: "mailto:yegi@msu.edu",
     github: "https://github.com/Yegi03",
     scholar: "https://scholar.google.com/citations?user=FvN4JSMAAAAJ&hl=en",
     linkedin:
