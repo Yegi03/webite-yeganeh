@@ -1,26 +1,42 @@
 import Link from "next/link";
+import { AnimatedHeading } from "@/components/AnimatedHeading";
+import { Counter } from "@/components/Counter";
 import { ExploreCards } from "@/components/ExploreCards";
+import { HeroCanvas } from "@/components/HeroCanvas";
 import { Reveal } from "@/components/Reveal";
+import { SpotlightCard } from "@/components/SpotlightCard";
 import { formatDate, getCollection } from "@/lib/content";
 import { researchAreas, siteConfig } from "@/lib/site";
 
 export default function Home() {
-  const recentNotes = getCollection("notes").slice(0, 3);
-  const featuredPublications = getCollection("publications").slice(0, 3);
-  const featuredProjects = getCollection("projects").slice(0, 4);
+  const allNotes = getCollection("notes");
+  const allPublications = getCollection("publications");
+  const allProjects = getCollection("projects");
+
+  const recentNotes = allNotes.slice(0, 3);
+  const featuredPublications = allPublications.slice(0, 3);
+  const featuredProjects = allProjects.slice(0, 4);
+
+  const stats = [
+    { value: allPublications.length, label: "Publications" },
+    { value: allProjects.length, label: "Open-source projects" },
+    { value: researchAreas.length, label: "Research areas" },
+  ];
 
   return (
     <div>
       {/* Hero */}
       <section className="relative overflow-hidden border-b border-stone-200/70">
         <div className="hero-glow pointer-events-none absolute inset-0 -z-10" />
-        <div className="mx-auto max-w-3xl px-6 pb-20 pt-20 sm:pt-24">
+        <HeroCanvas />
+        <div className="relative mx-auto max-w-3xl px-6 pb-20 pt-20 sm:pt-24">
           <p className="text-sm font-medium uppercase tracking-[0.2em] text-teal-800">
             {siteConfig.role}
           </p>
-          <h1 className="mt-4 font-serif text-4xl font-medium leading-[1.1] tracking-tight text-stone-900 sm:text-6xl">
-            {siteConfig.fullName}
-          </h1>
+          <AnimatedHeading
+            text={siteConfig.fullName}
+            className="mt-4 font-serif text-4xl font-medium leading-[1.1] tracking-tight text-stone-900 sm:text-6xl"
+          />
           <p className="mt-6 max-w-2xl text-xl leading-relaxed text-stone-700">
             {siteConfig.tagline}
           </p>
@@ -42,13 +58,13 @@ export default function Home() {
             </Link>
             <Link
               href="/publications"
-              className="rounded-full border border-stone-300 px-5 py-2.5 text-sm font-medium text-stone-800 transition-colors hover:border-stone-400"
+              className="rounded-full border border-stone-300 bg-white/40 px-5 py-2.5 text-sm font-medium text-stone-800 backdrop-blur-sm transition-colors hover:border-stone-400"
             >
               Publications
             </Link>
             <Link
               href="/cv"
-              className="rounded-full border border-stone-300 px-5 py-2.5 text-sm font-medium text-stone-800 transition-colors hover:border-stone-400"
+              className="rounded-full border border-stone-300 bg-white/40 px-5 py-2.5 text-sm font-medium text-stone-800 backdrop-blur-sm transition-colors hover:border-stone-400"
             >
               CV
             </Link>
@@ -86,6 +102,18 @@ export default function Home() {
               Email
             </a>
           </div>
+
+          {/* Stats */}
+          <div className="mt-12 flex flex-wrap gap-x-12 gap-y-6 border-t border-stone-200/70 pt-8">
+            {stats.map((stat) => (
+              <div key={stat.label}>
+                <div className="font-serif text-3xl font-medium text-stone-900 sm:text-4xl">
+                  <Counter value={stat.value} suffix="+" />
+                </div>
+                <div className="mt-1 text-sm text-stone-500">{stat.label}</div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -95,19 +123,18 @@ export default function Home() {
           <h2 className="font-serif text-2xl font-medium text-stone-900">
             What I work on
           </h2>
-          <div className="mt-6 grid gap-px overflow-hidden rounded-2xl border border-stone-200 bg-stone-200 sm:grid-cols-2">
+          <div className="mt-6 grid gap-4 sm:grid-cols-2">
             {researchAreas.map((area) => (
-              <div
-                key={area.title}
-                className="bg-stone-50 p-6 transition-colors hover:bg-white"
-              >
-                <h3 className="font-serif text-lg font-medium text-stone-900">
-                  {area.title}
-                </h3>
-                <p className="mt-2 text-sm leading-relaxed text-stone-600">
-                  {area.description}
-                </p>
-              </div>
+              <SpotlightCard key={area.title}>
+                <div className="p-6">
+                  <h3 className="font-serif text-lg font-medium text-stone-900">
+                    {area.title}
+                  </h3>
+                  <p className="mt-2 text-sm leading-relaxed text-stone-600">
+                    {area.description}
+                  </p>
+                </div>
+              </SpotlightCard>
             ))}
           </div>
         </Reveal>
@@ -167,30 +194,31 @@ export default function Home() {
             </div>
             <div className="mt-8 grid gap-4 sm:grid-cols-2">
               {featuredProjects.map((project) => (
-                <Link
-                  key={project.slug}
-                  href={`/projects/${project.slug}`}
-                  className="group flex flex-col rounded-xl border border-stone-200 p-5 transition-colors hover:border-teal-800/40 hover:bg-stone-50"
-                >
-                  <h3 className="font-serif text-base font-medium leading-snug text-stone-900">
-                    {project.title}
-                  </h3>
-                  <p className="mt-2 flex-1 text-sm leading-relaxed text-stone-600">
-                    {project.description}
-                  </p>
-                  {project.tags && project.tags.length > 0 && (
-                    <ul className="mt-4 flex flex-wrap gap-1.5">
-                      {project.tags.slice(0, 3).map((tag) => (
-                        <li
-                          key={tag}
-                          className="rounded-full bg-stone-100 px-2 py-0.5 text-xs text-stone-500"
-                        >
-                          {tag}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </Link>
+                <SpotlightCard key={project.slug} className="h-full">
+                  <Link
+                    href={`/projects/${project.slug}`}
+                    className="flex h-full flex-col p-5"
+                  >
+                    <h3 className="font-serif text-base font-medium leading-snug text-stone-900">
+                      {project.title}
+                    </h3>
+                    <p className="mt-2 flex-1 text-sm leading-relaxed text-stone-600">
+                      {project.description}
+                    </p>
+                    {project.tags && project.tags.length > 0 && (
+                      <ul className="mt-4 flex flex-wrap gap-1.5">
+                        {project.tags.slice(0, 3).map((tag) => (
+                          <li
+                            key={tag}
+                            className="rounded-full bg-stone-100 px-2 py-0.5 text-xs text-stone-500"
+                          >
+                            {tag}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </Link>
+                </SpotlightCard>
               ))}
             </div>
           </Reveal>
