@@ -4,12 +4,36 @@ import { motion } from "motion/react";
 import Link from "next/link";
 
 const cards = [
-  { href: "/projects", label: "Projects & Experiments" },
-  { href: "/publications", label: "Publications" },
-  { href: "/models", label: "Models, Math & Messy Data" },
-  { href: "/resources", label: "Interesting Resources" },
-  { href: "/notes", label: "Brain Notes & Memory Drawer" },
-  { href: "/now", label: "Current Obsessions" },
+  {
+    href: "/projects",
+    label: "Projects & Experiments",
+    description: "Code, models, and things I've built and broken.",
+  },
+  {
+    href: "/publications",
+    label: "Publications",
+    description: "Peer-reviewed and preprint research.",
+  },
+  {
+    href: "/models",
+    label: "Models, Math & Messy Data",
+    description: "Notebooks, derivations, and analysis write-ups.",
+  },
+  {
+    href: "/resources",
+    label: "Interesting Resources",
+    description: "Papers, tools, and links worth keeping.",
+  },
+  {
+    href: "/notes",
+    label: "Brain Notes & Memory Drawer",
+    description: "Half-formed thoughts and things I'm learning.",
+  },
+  {
+    href: "/now",
+    label: "Current Obsessions",
+    description: "What I'm reading, building, and chasing right now.",
+  },
 ];
 
 export function ExploreCards() {
@@ -36,11 +60,16 @@ export function ExploreCards() {
         >
           <Link
             href={card.href}
-            className="group flex items-center justify-between rounded-xl border border-stone-200 px-5 py-4 text-stone-800 transition-colors hover:border-teal-800/40 hover:bg-stone-50"
+            className="group flex h-full flex-col rounded-xl border border-stone-200 p-5 transition-colors hover:border-teal-800/40 hover:bg-stone-50"
           >
-            <span>{card.label}</span>
-            <span className="text-teal-800 opacity-0 transition-opacity group-hover:opacity-100">
-              →
+            <div className="flex items-center justify-between gap-3">
+              <span className="font-medium text-stone-900">{card.label}</span>
+              <span className="text-teal-800 transition-transform group-hover:translate-x-0.5">
+                →
+              </span>
+            </div>
+            <span className="mt-1.5 text-sm leading-relaxed text-stone-500">
+              {card.description}
             </span>
           </Link>
         </motion.div>
